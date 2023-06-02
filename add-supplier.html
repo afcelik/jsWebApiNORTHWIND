@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Supplier</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <div class="container mt-3">
+        <div class="row">
+            <h1>Add Supplier</h1>
+        </div>
+        <div class="row">
+            <div class="form-outline mt-3">
+                <input type="text" id="company-name" class="form-control" />
+                <label class="form-label" for="form12">Company Name</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-outline mt-3">
+                <input type="text" id="contact-name" class="form-control" />
+                <label class="form-label" for="form12">Contact Name</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-outline mt-3">
+                <input type="text" id="contact-title" class="form-control" />
+                <label class="form-label" for="form12">Contact Title</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+            <button type="button" class="btn btn-primary" onclick="Add()">Add</button>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-3">
+        <h2 id="list"></h2>
+        <table class="table table-striped">
+            <thead>
+              <tr>
+                <th id="title"></th>
+              </tr>
+            </thead>
+            <tbody id="companyNamesOver">
+              <tr>
+                <!-- <td></td> -->
+              </tr>
+            </tbody>
+          </table>
+    </div>
+<script>
+    function Add(){
+        let companyNameValue = document.querySelector("#company-name").value;
+        let contactNameValue = document.querySelector("#contact-name").value;
+        let contactTitleValue = document.querySelector("#contact-title").value;
+
+        let newSupplier = {
+            companyName : companyNameValue,
+            contactName : companyNameValue,
+            contactTitle : contactTitleValue
+        }
+
+        axios.post("https://northwind.vercel.app/api/suppliers", newSupplier).then(res => {
+            console.log('Response', res)
+            alert("Added successfully!");
+            List();
+        })
+    }
+    function List(){
+        document.querySelector("#companyNamesOver").innerHTML = "";
+        document.querySelector("#title").innerHTML = "Company Name";
+        document.querySelector("#list").innerHTML = "Supplier List";
+        axios.get("https://northwind.vercel.app/api/suppliers")
+        .then(res => {
+            let data = res.data;
+            console.log(data);
+            data.forEach(item => {
+                var trElement  = document.createElement("tr");
+                trElement.innerHTML = item.companyName;
+                document.querySelector("#companyNamesOver").appendChild(trElement);
+            });  
+        });
+    }
+</script>
+</body>
+
+</html>
